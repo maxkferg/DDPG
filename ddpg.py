@@ -16,7 +16,7 @@ from replay_buffer import ReplayBuffer
 REPLAY_BUFFER_SIZE = 1000000
 REPLAY_START_SIZE = 10000
 BATCH_SIZE = 64
-GAMMA = 0.8
+GAMMA = 0.95
 
 
 class DDPG:
@@ -80,7 +80,6 @@ class DDPG:
         self.critic_network.update_target()
 
     def save_model(self, path, episode):
-        #if self.episode % 10 == 1:
 	self.saver.save(self.sess, path + "modle.ckpt", episode)
 		
 
