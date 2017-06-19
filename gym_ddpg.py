@@ -47,7 +47,7 @@ def main():
 	
         # Testing:
         #if episode % 1 == 0:
-        if episode % 25 == 0 and episode > 100:
+        if episode % 25 == 0:
 			if not isdir(PATH):			
 				mkdir(PATH)
 			agent.save_model(PATH, episode)	
