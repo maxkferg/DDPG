@@ -40,7 +40,7 @@ class DDPG:
         # Initialize a random process the Ornstein-Uhlenbeck process for action exploration
         self.exploration_noise = OUNoise(self.action_dim)
 	
-	self.saver = tf.train.Saver()
+        self.saver = tf.train.Saver()
 
     def train(self):
         #print "train step",self.time_step
@@ -80,8 +80,13 @@ class DDPG:
         self.critic_network.update_target()
 
     def save_model(self, path, episode):
-	self.saver.save(self.sess, path + "modle.ckpt", episode)
-		
+	    self.saver.save(self.sess, path + "modle.ckpt", episode)
+
+    def load_model(self, path):
+        ckpt = tf.train.get_checkpoint_state(path)
+        if ckpt and ckpt.model_checkpoint_path:
+            self.saver.restore(self.sess, ckpt.model_checkpoint_path)
+            print("Model {} restored!".format(ckpt.model_checkpoint_path))
 
     def noise_action(self,state):
         # Select action a_t according to the current policy and exploration noise
