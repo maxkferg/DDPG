@@ -10,10 +10,10 @@ from time import sleep
 
 import inspect
 
-TEST = True
-#ENV_NAME = 'MountainCarContinuous-v0'
-ENV_NAME = 'ObjectTransition-v0'
-PATH = 'experiments/' + ENV_NAME + '-E2/'
+TEST = False
+ENV_NAME = 'MountainCarContinuous-v0'
+#ENV_NAME = 'ObjectTransition-v0'
+PATH = 'experiments/' + ENV_NAME + '-E5/'
 EPISODES = 100000
 TEST_NUM = 3
 
@@ -25,8 +25,6 @@ def main():
     #env.monitor.start('experiments/' + ENV_NAME,force=True)
     #env = gym.wrappers.Monitor(env, PATH, force=True)
 
-    #env.configure(1,2)
-    print("   ")
 
     returns = []
     rewards = []
@@ -42,32 +40,32 @@ def main():
         init_state = [int(argv[2]), int(argv[3])]
 
 
-    if TEST:
-        agent.load_model(PATH)
-        total_return = 0
-        total_reward = 0
-        for i in xrange(TEST_NUM):
-            env.render()
-            reward_tra = []                
-            state = env.reset()
-            #env.set_state(init_state)
-            #state = env.get_state()
-            info = {}
-            info['state'] = init_state
-            env.configure(info)
+    # if TEST: #for object transition
+    #     agent.load_model(PATH)
+    #     total_return = 0
+    #     total_reward = 0
+    #     for i in xrange(TEST_NUM):
+    #         env.render()
+    #         reward_tra = []                
+    #         state = env.reset()
+    #         #env.set_state(init_state)
+    #         #state = env.get_state()
+    #         info = {}
+    #         info['state'] = init_state
+    #         env.configure(info)
 
-            reward_per_step = 0
-            for j in xrange(env.spec.timestep_limit):
-                env.render()
-                action = agent.action(state) # direct action for test
-                state, reward, done, _ = env.step(action)
-                total_return += reward
-                if done:
-                    break
-                reward_per_step += (reward - reward_per_step)/(j+1)
-                sleep(0.2)
-            total_reward += reward_per_step
-        return
+    #         reward_per_step = 0
+    #         for j in xrange(env.spec.timestep_limit):
+    #             env.render()
+    #             action = agent.action(state) # direct action for test
+    #             state, reward, done, _ = env.step(action)
+    #             total_return += reward
+    #             if done:
+    #                 break
+    #             reward_per_step += (reward - reward_per_step)/(j+1)
+    #             sleep(0.2)
+    #         total_reward += reward_per_step
+    #     return
 
     for episode in xrange(EPISODES):
         state = env.reset()
@@ -82,8 +80,8 @@ def main():
             agent.perceive(state,action,reward,next_state,done)
             state = next_state
             reward_tra.append(reward)
-        if done:
-                break
+            if done:
+                    break
     
         fig_reward_tra.clear()
         fig_reward_tra.plot(reward_tra)
@@ -113,8 +111,8 @@ def main():
                     reward_per_step += (reward - reward_per_step)/(j+1)
                 total_reward += reward_per_step
         
-            ave_return = total_return/TEST
-            ave_reward = total_reward/TEST
+            ave_return = total_return/TEST_NUM
+            ave_reward = total_reward/TEST_NUM
             returns.append(ave_return)
             rewards.append(ave_reward)
         
@@ -126,6 +124,8 @@ def main():
             plt.pause(0.005)
 
             print 'episode: ',episode,'Evaluation Average Return:',ave_return, '  Evaluation Average Reward: ', ave_reward
+
+    fig_avg_res.savefig(PATH + "train_reward.png")
     #env.monitor.close()
 
 if __name__ == '__main__':
