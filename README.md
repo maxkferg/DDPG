@@ -1,12 +1,49 @@
 # DDPG
 
-Reimplementing DDPG from Continuous Control with Deep Reinforcement Learning based on OpenAI Gym and Tensorflow
+Implimentation of DDPG algorithm which is installable with pip.
+
+The original DDPG algorithm was proposed in the paper: Continuous Control with Deep Reinforcement Learning
 
 [http://arxiv.org/abs/1509.02971](http://arxiv.org/abs/1509.02971)
 
 It is still a problem to implement Batch Normalization on the critic network. However the actor network works well with Batch Normalization.
 
-Some Mujoco environments are still unsolved on OpenAI Gym.
+## Installation
+
+Install the package
+```sh
+pip3 install ddpg
+```
+
+## Getting Started
+
+The DDPG algorithm acts on environments which follow the openai-gym api.
+```python
+# Create a test environment with gym
+env = gym.make('MountainCarContinuous-v0')
+```
+
+Train the DDPG agent:
+```python
+from ddpg import DDPG
+
+# Create a new agent
+agent = DDPG(env)
+
+# Train the agent
+agent.train()
+
+# Save the weights
+agent.model_save()
+```
+
+
+## Dependencies
+
+* Python3
+* Tensorflow 1.1
+* NumPy
+* Matplotlib
 
 ## Some Evaluations
 
@@ -15,25 +52,6 @@ Some Mujoco environments are still unsolved on OpenAI Gym.
 2 [InvertedDoublePendulum](https://gym.openai.com/evaluations/eval_PtYUMaEUSwqS3YUYA6MOQ#reproducibility)
 
 3 [Hopper unsolved](https://gym.openai.com/evaluations/eval_MwvKWh5CSp6SO8IAWU4pqw#reproducibility)
-
-
-## How to use
-
-```
-git clone https://github.com/songrotek/DDPG.git
-cd DDPG
-python gym_ddpg.py
-
-```
-If you want to change the Gym environment, change ENV_NAME in gym_ddpg.py.
-
-If you want to change the Network type, change import in ddpg.py such as 
-
-```
-from actor_network_bn import ActorNetwork
-to
-from actor_network import ActorNetwork
-```
 
 ## Reference
 1 [https://github.com/rllab/rllab](https://github.com/rllab/rllab)
