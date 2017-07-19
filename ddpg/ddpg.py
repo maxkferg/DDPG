@@ -6,10 +6,10 @@
 import gym
 import tensorflow as tf
 import numpy as np
-from ou_noise import OUNoise
-from critic_network import CriticNetwork 
-from actor_network import ActorNetwork
-from replay_buffer import ReplayBuffer
+from .ou_noise import OUNoise
+from .critic_network import CriticNetwork
+from .actor_network import ActorNetwork
+from .replay_buffer import ReplayBuffer
 
 # Hyper Parameters:
 
@@ -33,14 +33,14 @@ class DDPG:
 
         self.actor_network = ActorNetwork(self.sess,self.state_dim,self.action_dim)
         self.critic_network = CriticNetwork(self.sess,self.state_dim,self.action_dim)
-        
+
         # initialize replay buffer
         self.replay_buffer = ReplayBuffer(REPLAY_BUFFER_SIZE)
 
         # Initialize a random process the Ornstein-Uhlenbeck process for action exploration
         self.exploration_noise = OUNoise(self.action_dim)
-	
-	self.saver = tf.train.Saver()
+
+        self.saver = tf.train.Saver()
 
     def train(self):
         #print "train step",self.time_step
@@ -56,11 +56,11 @@ class DDPG:
         action_batch = np.resize(action_batch,[BATCH_SIZE,self.action_dim])
 
         # Calculate y_batch
-        
+
         next_action_batch = self.actor_network.target_actions(next_state_batch)
         q_value_batch = self.critic_network.target_q(next_state_batch,next_action_batch)
-        y_batch = []  
-        for i in range(len(minibatch)): 
+        y_batch = []
+        for i in range(len(minibatch)):
             if done_batch[i]:
                 y_batch.append(reward_batch[i])
             else :
@@ -81,8 +81,8 @@ class DDPG:
 
     def save_model(self, path, episode):
         #if self.episode % 10 == 1:
-	self.saver.save(self.sess, path + "modle.ckpt", episode)
-		
+        self.saver.save(self.sess, path + "modle.ckpt", episode)
+
 
     def noise_action(self,state):
         # Select action a_t according to the current policy and exploration noise
@@ -108,8 +108,8 @@ class DDPG:
         # Re-iniitialize the random process when an episode ends
         if done:
             self.exploration_noise.reset()
-	
-	
+
+
 
 
 
